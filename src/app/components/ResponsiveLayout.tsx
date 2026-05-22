@@ -19,7 +19,10 @@ export default function ResponsiveLayout({
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    const check = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
   if (isMobile === null) return null

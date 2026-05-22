@@ -37,7 +37,7 @@ export default function Home() {
             <div className="text-4xl mb-3">⚠️</div>
             <h1 className="text-white text-3xl font-bold mb-4">NO REAL MONEY</h1>
             <p className="text-white text-sm mb-3">
-              This is a demo. No real money is involved. Don't gamble with real money.
+              This is a demo. No real money is involved. Don&apos;t gamble with real money.
             </p>
             <button
               onClick={handleAcceptDisclaimer}

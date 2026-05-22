@@ -10,15 +10,17 @@ export function dropPlinko(betAmount) {
         return;
     }
 
-    scene.sound.play('mouseClick', { volume: 3.0 });
+    try { scene.sound.play('mouseClick', { volume: 3.0 }); } catch { }
     const BALL_RADIUS = scene.BALL_RADIUS;
     const BASE_WIDTH = scene.BASE_WIDTH;
 
-    const ballGraphics = scene.add.graphics();
-    ballGraphics.fillStyle(0xff0000, 1);
-    ballGraphics.fillCircle(BALL_RADIUS, BALL_RADIUS, BALL_RADIUS);
-    ballGraphics.generateTexture('ball', BALL_RADIUS * 2, BALL_RADIUS * 2);
-    ballGraphics.destroy();
+    if (!scene.textures.exists('ball')) {
+        const ballGraphics = scene.add.graphics();
+        ballGraphics.fillStyle(0xff0000, 1);
+        ballGraphics.fillCircle(BALL_RADIUS, BALL_RADIUS, BALL_RADIUS);
+        ballGraphics.generateTexture('ball', BALL_RADIUS * 2, BALL_RADIUS * 2);
+        ballGraphics.destroy();
+    }
 
     const CATEGORY_BALL = 1;
     const CATEGORY_OBSTACLE = 2;
@@ -127,18 +129,20 @@ export function initGame(container) {
         // });
         this.load.audio('mouseClick', '/assets/audio/mouseClick.mp3');
         this.load.audio('ballBounce', '/assets/audio/ballBounce.mp3');
-        this.betButton = document.getElementById('bet-btn');
-        this.betButton.addEventListener('click', () => {
+        const betButton = document.getElementById('bet-btn');
+        const handleBetClick = () => {
             const betAmount = parseFloat(document.getElementById('betAmount').value);
             if (betAmount === 0 || isNaN(betAmount)) {
                 return;
             }
-            this.sound.play('mouseClick', { volume: 3.0 });
-            const ballGraphics = this.add.graphics();
-            ballGraphics.fillStyle(0xff0000, 1);
-            ballGraphics.fillCircle(BALL_RADIUS, BALL_RADIUS, BALL_RADIUS);
-            ballGraphics.generateTexture('ball', BALL_RADIUS * 2, BALL_RADIUS * 2);
-            ballGraphics.destroy();
+            try { this.sound.play('mouseClick', { volume: 3.0 }); } catch { }
+            if (!this.textures.exists('ball')) {
+                const ballGraphics = this.add.graphics();
+                ballGraphics.fillStyle(0xff0000, 1);
+                ballGraphics.fillCircle(BALL_RADIUS, BALL_RADIUS, BALL_RADIUS);
+                ballGraphics.generateTexture('ball', BALL_RADIUS * 2, BALL_RADIUS * 2);
+                ballGraphics.destroy();
+            }
 
             const rand_x = Phaser.Math.Between(1, 20) * (Phaser.Math.Between(0, 1) ? 1 : -1);
             const ball = this.matter.add.image(BASE_WIDTH / 2 + rand_x, -10, 'ball');
@@ -149,11 +153,15 @@ export function initGame(container) {
             ball.body.collisionFilter.category = CATEGORY_BALL;
             ball.body.collisionFilter.mask = CATEGORY_OBSTACLE;
             ball.setData('betAmount', betAmount);
-            console.log('Bet Amount:', ball.getData('betAmount'));
-        });
+        };
+        betButton.addEventListener('click', handleBetClick);
+        // Remove listener when this scene is destroyed so stale handlers
+        // from React StrictMode double-invoke don't fire on the dead scene.
+        this.events.once('shutdown', () => betButton.removeEventListener('click', handleBetClick));
     }
 
     function create() {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         gameSceneInstance = this;
         this.BALL_RADIUS = BALL_RADIUS;
         this.BASE_WIDTH = BASE_WIDTH;
@@ -236,7 +244,7 @@ export function initGame(container) {
                 // read this first before getting destroyed
                 const betAmount = parseFloat(ball.getData('betAmount'));
                 ball.destroy();
-                this.sound.play('ballBounce', { volume: 1.0, detune: Phaser.Math.Between(-100, 200) });
+                try { this.sound.play('ballBounce', { volume: 1.0, detune: Phaser.Math.Between(-100, 200) }); } catch { }
                 const originalY = pos.y;
                 const targetY = Math.min(multi.y + 10, originalY + 10);
                 this.tweens.add({

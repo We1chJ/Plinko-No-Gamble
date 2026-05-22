@@ -76,7 +76,7 @@ const Sidebar = () => {
                                 placeholder={'10.00'}
                                 value={amount}
                                 onChange={(e) => {
-                                    setAmount(e.target.value as any);
+                                    setAmount(parseFloat(e.target.value) || 0);
                                 }}
                                 onBlur={(e) => {
                                     const value = parseFloat(e.target.value);
@@ -139,7 +139,7 @@ const Sidebar = () => {
                                 placeholder={'10.00'}
                                 value={autoAmount}
                                 onChange={(e) => {
-                                    setAutoAmount(e.target.value as any);
+                                    setAutoAmount(parseFloat(e.target.value) || 0);
                                 }}
                                 onBlur={(e) => {
                                     const value = parseFloat(e.target.value);
