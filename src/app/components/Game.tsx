@@ -11,6 +11,7 @@ const GAME_WIDTH = 1229;
 const GAME_HEIGHT = 591;
 const MOBILE_BREAKPOINT = 700;
 const MOBILE_PANEL_HEIGHT_RATIO = 0.55;
+const MOBILE_ZOOM = 1.5;
 
 const Game = () => {
     const gameRef = useRef<HTMLDivElement>(null);
@@ -48,7 +49,11 @@ const Game = () => {
             if (mobile) {
                 const availW = window.innerWidth;
                 const availH = window.innerHeight * MOBILE_PANEL_HEIGHT_RATIO;
-                setScale(Math.min(availW / GAME_WIDTH, availH / GAME_HEIGHT));
+                const scaleByW = availW / GAME_WIDTH;
+                const scaleByH = availH / GAME_HEIGHT;
+                // Zoom in so the game fills more of the screen; cap so it never
+                // overflows vertically. Empty side margins are cropped by overflow:hidden.
+                setScale(Math.min(scaleByW * MOBILE_ZOOM, scaleByH));
             } else {
                 setScale(1);
             }
