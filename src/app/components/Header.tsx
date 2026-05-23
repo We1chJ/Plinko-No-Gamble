@@ -27,16 +27,16 @@ const Header = () => {
         }
     };
     return (
-        <div className="w-full h-full flex items-center justify-between px-3 gap-2 shadow-lg" style={{ backgroundColor: 'rgb(26,44,56)', color: 'white', fontFamily: 'plinko_m' }}>
-            {/* Logo — shrinks on narrow screens */}
-            <div className="flex items-center gap-2 min-w-0 flex-shrink" style={{ fontFamily: 'plinko_bold', fontWeight: 'bold' }}>
+        <div className="w-full h-full grid grid-cols-3 items-center px-3 shadow-lg" style={{ backgroundColor: 'rgb(26,44,56)', color: 'white', fontFamily: 'plinko_m' }}>
+            {/* Left: Logo — hidden on mobile so balance stays truly centered */}
+            <div className="flex items-center gap-2 min-w-0 max-[700px]:hidden" style={{ fontFamily: 'plinko_bold', fontWeight: 'bold' }}>
                 <div className="flex-shrink-0">
                     <Image src={'/nogamble.png'} width={50} height={50} alt={'No gamble'} style={{ width: 'clamp(28px, 5vw, 50px)', height: 'auto' }} />
                 </div>
                 <span className="truncate" style={{ fontSize: 'clamp(14px, 3vw, 30px)' }}>PLINKO</span>
             </div>
-            {/* Balance + Wallet — never shrinks */}
-            <div className="flex items-center flex-shrink-0">
+            {/* Center: Balance + Wallet — always centered */}
+            <div className="flex items-center justify-center col-start-2 max-[700px]:col-span-3 max-[700px]:col-start-1">
                 <div
                     id="balance"
                     className='relative bg-[#0F212E] text-white flex items-center justify-center rounded-l'
@@ -56,6 +56,8 @@ const Header = () => {
                     Wallet
                 </button>
             </div>
+            {/* Right: spacer to keep center column truly centered on desktop */}
+            <div className="max-[700px]:hidden" />
 
             {showPaymentModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
