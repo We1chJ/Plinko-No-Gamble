@@ -11,7 +11,7 @@ const GAME_WIDTH = 1229;
 const GAME_HEIGHT = 591;
 const MOBILE_BREAKPOINT = 700;
 const MOBILE_PANEL_HEIGHT_RATIO = 0.55;
-const MOBILE_ZOOM = 1.5;
+const MOBILE_ZOOM = 3.0;
 
 const Game = () => {
     const gameRef = useRef<HTMLDivElement>(null);
